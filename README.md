@@ -13,6 +13,7 @@ BUT WON'T BE TAKEN INTO ACCOUNT IN PRI AND PRI-RR ALGORITHMS.
 
 
 GENERAL VARIABLES:
+
 tasks_by_arrival = getting the listed task data read from the file, called for each of the algorithm functions. Sorted by the arrival time, but in some algorithms,
 it can be sorted as priority, cpu burst depending on the kind of algorithm. 
 
