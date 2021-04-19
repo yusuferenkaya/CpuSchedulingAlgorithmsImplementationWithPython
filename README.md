@@ -15,18 +15,26 @@ BUT WON'T BE TAKEN INTO ACCOUNT IN PRI AND PRI-RR ALGORITHMS.
 GENERAL VARIABLES:
 tasks_by_arrival = getting the listed task data read from the file, called for each of the algorithm functions. Sorted by the arrival time, but in some algorithms,
 it can be sorted as priority, cpu burst depending on the kind of algorithm. 
+
 tasks = adding the all records of run of the processes in order as if a gantt chart. Also appending what time and how much there is no process to calculate the
 waiting times of the processes comprehensively, especially on the round-robin and pri-rr algorithms. (Also the idle time intervals will be appended to this list,
 but their Task class object will be None. since there is no object on this interval.)
+
 turn_around_times and waiting_times = to list all the waiting and turn_around_times of the processes, in order to calculate the
 average of those.
+
 time_passed = a time implementation to handle the processes easily.
+
 minimum_arrival = getting the minimum arrival time of the process in the tasks_by_arrival list. If it is bigger than time_passed, it will be the new time_passed value.
 And the number between time_passed and minimum_arrival will be the idle time being appended to the tasks list.
+
 current_task = used in while loop in order to determine the task that will be run currently. It can be chosen depending on the kind of algorithm.
+
 current_list = Will be used in only rr and pri-rr algorithms, in order to handle the context switches between the tasks easily.
+
 temp = Used in pri-rr and srtf in order to determine while the process is being run, will be a switch to another task with the higher priority or shortest burst time
 depending on the algorithm.
+
 temp_list = Used in pri-rr. In order to implement the processes which have the same equality in a round-robin fashion.
 
 
