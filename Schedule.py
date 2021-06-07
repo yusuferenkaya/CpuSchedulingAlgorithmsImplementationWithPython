@@ -150,7 +150,7 @@ def pri(file_name):
                    f"\n\tAverage turnaround time : {sum(turn_around_times)/len(turn_around_times)}")
     file.close()
 
-def rr(file_name):
+def rr(file_name,time_quantum):
     tasks_by_arrival = sorted(task_list(file_name), key=lambda x: (x.arrival_time,int(x.task_name[1:])))
     time_passed = 0
     total_bursts = {task.task_name : task.cpu_burst for task in tasks_by_arrival}
@@ -168,30 +168,30 @@ def rr(file_name):
                 and task.last_executed_time == 0)
         current_task = current_list[0]
         if time_passed >= current_task.arrival_time:
-            if current_task.cpu_burst > 10:
+            if current_task.cpu_burst > time_quantum:
                         file.write(f"\nWill run name : {current_task.task_name}\nPriority : {current_task.priority}"
                                    f"\nBurst: {current_task.cpu_burst}\n")
-                        current_task.cpu_burst -= 10
-                        time_passed += 10
+                        current_task.cpu_burst -= time_quantum
+                        time_passed += time_quantum
                         current_list.extend(
                             [task for task in tasks_by_arrival if time_passed >= task.arrival_time and task not in current_list])
                         file.write(f"""Task {current_task.task_name} is executed.
                                         Remaining CPU Burst: {current_task.cpu_burst}\n""")
                         current_list.remove(current_task)
                         current_list.append(current_task)
-                        tasks.append((current_task, 10, time_passed))
+                        tasks.append((current_task, time_quantum, time_passed))
 
 
-            elif current_task.cpu_burst == 10:
+            elif current_task.cpu_burst == time_quantum:
                         file.write(f"\nWill run name : {current_task.task_name}\nPriority : {current_task.priority}"
                                    f"\nBurst: {current_task.cpu_burst}\n")
                         current_task.cpu_burst = 0
-                        time_passed += 10
+                        time_passed += time_quantum
                         current_list.extend(
                             [task for task in tasks_by_arrival if time_passed >= task.arrival_time and task not in current_list])
                         tasks_by_arrival.remove(current_task)
                         current_list.remove(current_task)
-                        tasks.append((current_task, 10, time_passed))
+                        tasks.append((current_task, time_quantum, time_passed))
                         current_task.last_executed_time = time_passed
                         file.write(f"""Task {current_task.task_name} finished
                                        Remaining CPU Burst : {current_task.cpu_burst}\n"""
@@ -232,7 +232,7 @@ def rr(file_name):
 
 
 
-def pri_rr(file_name):
+def pri_rr(file_name,time_quantum):
         tasks_by_arrival = sorted([task for task in task_list(file_name) if 1 <= task.priority <= 10], key=lambda x: (x.arrival_time,int(x.task_name[1:])))
         time_passed = 0
         total_bursts = {task.task_name : task.cpu_burst for task in tasks_by_arrival}
@@ -251,16 +251,16 @@ def pri_rr(file_name):
                 sorted([task for task in current_list],
                        key=lambda x: (x.priority), reverse=True)[
                    0]
-            if [task.priority for task in current_list].count(current_task.priority) == 10:
+            if [task.priority for task in current_list].count(current_task.priority) == time_quantum:
                     temp = [task for task in tasks_by_arrival if time_passed < task.arrival_time < time_passed +
                                 current_task.cpu_burst and task.priority > current_task.priority]
                     if temp:
-                        if current_task.cpu_burst >= 10 and time_passed + 10 <= temp[0].arrival_time:
-                            if current_task.cpu_burst > 10:
+                        if current_task.cpu_burst >= time_quantum and time_passed + time_quantum <= temp[0].arrival_time:
+                            if current_task.cpu_burst > time_quantum:
                                 file.write(f"\nWill run name : {current_task.task_name}\nPriority : {current_task.priority}"
                                            f"\nBurst: {current_task.cpu_burst}\n")
-                                current_task.cpu_burst -= 10
-                                time_passed += 10
+                                current_task.cpu_burst -= time_quantum
+                                time_passed += time_quantum
                                 current_list.extend(
                                     [task for task in tasks_by_arrival if
                                      time_passed >= task.arrival_time and task not in current_list])
@@ -268,13 +268,13 @@ def pri_rr(file_name):
                                             Remaining CPU Burst : {current_task.cpu_burst}\n""")
                                 current_list.remove(current_task)
                                 current_list.append(current_task)
-                                tasks.append((current_task, 10, time_passed))
-                            elif current_task.cpu_burst == 10:
+                                tasks.append((current_task, time_quantum, time_passed))
+                            elif current_task.cpu_burst == time_quantum:
                                 file.write(
                                     f"\nWill run name : {current_task.task_name}\nPriority : {current_task.priority}"
                                     f"\nBurst: {current_task.cpu_burst}\n")
-                                current_task.cpu_burst -= 10
-                                time_passed += 10
+                                current_task.cpu_burst -= time_quantum
+                                time_passed += time_quantum
                                 current_list.extend(
                                     [task for task in tasks_by_arrival if
                                      time_passed >= task.arrival_time and task not in current_list])
@@ -282,7 +282,7 @@ def pri_rr(file_name):
                                             Remaining CPU Burst : {current_task.cpu_burst}\n""")
                                 current_list.remove(current_task)
                                 tasks_by_arrival.remove(current_task)
-                                tasks.append((current_task, 10, time_passed))
+                                tasks.append((current_task, time_quantum, time_passed))
 
                         else:
 
@@ -328,13 +328,13 @@ def pri_rr(file_name):
                     if len(temp_list) != 1:
 
                         if temp:
-                            if temp_task.cpu_burst >= 10 and time_passed + 10 <= temp[0].arrival_time:
-                                if temp_task.cpu_burst > 10:
+                            if temp_task.cpu_burst >= time_quantum and time_passed + time_quantum <= temp[0].arrival_time:
+                                if temp_task.cpu_burst > time_quantum:
                                     file.write(
                                         f"\nWill run name : {temp_task.task_name}\nPriority : {temp_task.priority}"
                                         f"\nBurst: {temp_task.cpu_burst}\n")
-                                    temp_task.cpu_burst -= 10
-                                    time_passed += 10
+                                    temp_task.cpu_burst -= time_quantum
+                                    time_passed += time_quantum
                                     current_list.extend(
                                         [task for task in tasks_by_arrival if
                                          time_passed >= task.arrival_time and task not in current_list])
@@ -342,13 +342,13 @@ def pri_rr(file_name):
                                                 Remaining CPU Burst : {temp_task.cpu_burst}\n""")
                                     current_list.remove(temp_task)
                                     current_list.append(temp_task)
-                                    tasks.append((temp_task, 10, time_passed))
-                                elif temp_task.cpu_burst == 10:
+                                    tasks.append((temp_task, time_quantum, time_passed))
+                                elif temp_task.cpu_burst == time_quantum:
                                     file.write(
                                         f"\nWill run name : {temp_task.task_name}\nPriority : {temp_task.priority}"
                                         f"\nBurst: {temp_task.cpu_burst}\n")
-                                    temp_task.cpu_burst -= 10
-                                    time_passed += 10
+                                    temp_task.cpu_burst -= time_quantum
+                                    time_passed += time_quantum
                                     current_list.extend(
                                         [task for task in tasks_by_arrival if
                                          time_passed >= task.arrival_time and task not in current_list])
@@ -356,7 +356,7 @@ def pri_rr(file_name):
                                                 Remaining CPU Burst : {temp_task.cpu_burst}\n""")
                                     current_list.remove(temp_task)
                                     tasks_by_arrival.remove(temp_task)
-                                    tasks.append((temp_task, 10, time_passed))
+                                    tasks.append((temp_task, time_quantum, time_passed))
 
                             else:
                                 file.write(
@@ -375,12 +375,12 @@ def pri_rr(file_name):
                                             Remaining CPU Burst : {temp_task.cpu_burst}\n""")
 
                         else:
-                            if temp_task.cpu_burst > 10:
+                            if temp_task.cpu_burst > time_quantum:
                                 file.write(
                                     f"\nWill run name : {temp_task.task_name}\nPriority : {temp_task.priority}"
                                     f"\nBurst: {temp_task.cpu_burst}\n")
-                                temp_task.cpu_burst -= 10
-                                time_passed += 10
+                                temp_task.cpu_burst -= time_quantum
+                                time_passed += time_quantum
                                 current_list.extend(
                                     [task for task in tasks_by_arrival if
                                      time_passed >= task.arrival_time and task not in current_list])
@@ -388,14 +388,14 @@ def pri_rr(file_name):
                                             Remaining CPU Burst : {temp_task.cpu_burst}\n""")
                                 temp_list.remove(temp_task)
                                 temp_list.append(temp_task)
-                                tasks.append((temp_task, 10, time_passed))
+                                tasks.append((temp_task, time_quantum, time_passed))
 
-                            elif temp_task.cpu_burst == 10:
+                            elif temp_task.cpu_burst == time_quantum:
                                 file.write(
                                     f"\nWill run name : {temp_task.task_name}\nPriority : {temp_task.priority}"
                                     f"\nBurst: {temp_task.cpu_burst}\n")
                                 temp_task.cpu_burst = 0
-                                time_passed += 10
+                                time_passed += time_quantum
                                 current_list.extend(
                                     [task for task in tasks_by_arrival if
                                      time_passed >= task.arrival_time and task not in current_list])
@@ -404,7 +404,7 @@ def pri_rr(file_name):
                                 temp_list.remove(temp_task)
                                 tasks_by_arrival.remove(temp_task)
                                 current_list.remove(temp_task)
-                                tasks.append((temp_task, 10, time_passed))
+                                tasks.append((temp_task, time_quantum, time_passed))
                                 temp_task.last_executed_time = time_passed
 
                             else:
@@ -518,9 +518,11 @@ def srtf(file_name):
                f"Average turnaround time : {sum(turn_around_times) / len(turn_around_times)}")
     file.close()
 
-
 try:
-    eval(f"{sys.argv[1]}('{sys.argv[2]}')")
+    if len(sys.argv) == 3:
+        eval(f"{sys.argv[1]}('{sys.argv[2]}')")
+    else:
+        eval(f"{sys.argv[1]}('{sys.argv[2]}',{sys.argv[3]})")
 except:
     print("There was a problem about the name of the file or the algorithm you choose."
           "Algorithms: fcfs, sjf, pri, rr, pri_rr, srtf ")
