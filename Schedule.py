@@ -63,7 +63,8 @@ def fcfs(file_name):
                    f"Burst: {current_task.cpu_burst}\n"
                    f"Task {current_task.task_name} finished.\n"
                    f"\nWaiting time for {current_task.task_name} : {current_task.waiting_time}\n"
-                   f"Turnaround time for {current_task.task_name} : {current_task.turnaround_time}\n")
+                   f"Turnaround time for {current_task.task_name} : {current_task.turnaround_time}\n"
+                   f"Finishing time for {current_task.task_name} : {current_task.last_executed_time}\n")
 
     file.write("\t*-*" * 8)
     file.write(f"\n\n\tAverage waiting time : {sum(waiting_times) / len(waiting_times)}"
@@ -99,7 +100,9 @@ def sjf(file_name):
                    f"Burst: {current_task.cpu_burst}\n"
                    f"Task {current_task.task_name} finished.\n"
                    f"\nWaiting time for {current_task.task_name} : {current_task.waiting_time}\n"
-                   f"Turnaround time for {current_task.task_name} : {current_task.turnaround_time}\n")
+                   f"Turnaround time for {current_task.task_name} : {current_task.turnaround_time}\n"
+                   f"Finishing time for {current_task.task_name} : {current_task.last_executed_time}\n"
+                   )
 
     file.write("\t*-*" * 8)
     file.write(f"\n\n\tAverage waiting time : {sum(waiting_times)/len(waiting_times)}"
@@ -139,7 +142,8 @@ def pri(file_name):
                    f"Burst: {current_task.cpu_burst}\n"
                    f"Task {current_task.task_name} finished.\n"
                    f"\nWaiting time for {current_task.task_name} : {current_task.waiting_time}\n"
-                   f"Turnaround time for {current_task.task_name} : {current_task.turnaround_time}\n")
+                   f"Turnaround time for {current_task.task_name} : {current_task.turnaround_time}\n"
+                   f"Finishing time for {current_task.task_name} : {current_task.last_executed_time}\n")
 
     file.write("\t*-*" * 8)
     file.write(f"\n\tAverage waiting time : {sum(waiting_times)/len(waiting_times)}"
@@ -190,7 +194,8 @@ def rr(file_name):
                         tasks.append((current_task, 10, time_passed))
                         current_task.last_executed_time = time_passed
                         file.write(f"""Task {current_task.task_name} finished
-                                       Remaining CPU Burst : {current_task.cpu_burst}\n""")
+                                       Remaining CPU Burst : {current_task.cpu_burst}\n"""
+                                   )
 
 
             else:
@@ -217,7 +222,8 @@ def rr(file_name):
         turn_around_times.append(task.turnaround_time)
         waiting_times.append(task.waiting_time)
         file.write(f"""Waiting time for {task.task_name} : {task.waiting_time}\n""")
-        file.write(f"""Turnaround time for {task.task_name} : {task.turnaround_time}\n""")
+        file.write(f"""Turnaround time for {task.task_name} : {task.turnaround_time}\n"""
+                   f"Finishing time for {task.task_name} : {task.last_executed_time}\n")
     file.write("\t*-*" * 8)
     file.write(f"\nAverage waiting time : {sum(waiting_times)/len(waiting_times)}"
                f"\nAverage turnaround time : {sum(turn_around_times)/len(turn_around_times)}")
@@ -245,7 +251,7 @@ def pri_rr(file_name):
                 sorted([task for task in current_list],
                        key=lambda x: (x.priority), reverse=True)[
                    0]
-            if [task.priority for task in current_list].count(current_task.priority) == 1:
+            if [task.priority for task in current_list].count(current_task.priority) == 10:
                     temp = [task for task in tasks_by_arrival if time_passed < task.arrival_time < time_passed +
                                 current_task.cpu_burst and task.priority > current_task.priority]
                     if temp:
@@ -448,7 +454,8 @@ def pri_rr(file_name):
             turn_around_times.append(task.turnaround_time)
             waiting_times.append(task.waiting_time)
             file.write(f"""Waiting time for {task.task_name} : {task.waiting_time}\n""")
-            file.write(f"""Turnaround time for {task.task_name} : {task.turnaround_time}\n""")
+            file.write(f"""Turnaround time for {task.task_name} : {task.turnaround_time}\n"""
+                       f"Finishing time for {task.task_name} : {task.last_executed_time}\n")
         file.write(f"\nAverage waiting time : {sum(waiting_times) / len(waiting_times)}"
                    f"\nAverage turnaround time : {sum(turn_around_times) / len(turn_around_times)}")
         file.close()
@@ -505,7 +512,8 @@ def srtf(file_name):
         turn_around_times.append(task.turnaround_time)
         waiting_times.append(task.waiting_time)
         file.write(f"""Waiting time for {task.task_name} : {task.waiting_time}\n""")
-        file.write(f"""Turnaround time for {task.task_name} : {task.turnaround_time}\n""")
+        file.write(f"""Turnaround time for {task.task_name} : {task.turnaround_time}\n"""
+                   f"Finishing time for {task.task_name} : {task.last_executed_time}\n")
     file.write(f"\nAverage waiting time : {sum(waiting_times) / len(waiting_times)}\n"
                f"Average turnaround time : {sum(turn_around_times) / len(turn_around_times)}")
     file.close()
